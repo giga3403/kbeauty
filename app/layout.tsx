@@ -1,17 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Playfair_Display, Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
+const notoSansKR = Noto_Sans_KR({ subsets: ["latin"], weight: ["400", "500", "700"], variable: "--font-noto" });
 
 export const metadata: Metadata = {
-  title: "K-Beauty Companion",
-  description: "Find the Best Korean Beauty for Your Skin",
+  title: "Beauty Passport",
+  description: "Your K-Beauty Journey Ticket",
   manifest: "/manifest.json",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FAFAF9",
+  themeColor: "#EADFCF",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -24,8 +25,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} min-h-screen bg-stone-100 flex justify-center antialiased`}>
-        <div className="w-full max-w-md bg-stone-50 min-h-screen relative shadow-2xl overflow-x-hidden flex flex-col">
+      <body className={`${notoSansKR.variable} ${playfair.variable} font-sans min-h-screen bg-slate-950 flex justify-center antialiased text-white`}>
+        <div className="w-full max-w-md bg-slate-950 min-h-screen relative shadow-2xl overflow-x-hidden flex flex-col border-x border-white/10">
           {children}
         </div>
       </body>

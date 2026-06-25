@@ -1,73 +1,74 @@
 "use client";
 
-import { Heart, Navigation, ChevronLeft } from "lucide-react";
+import { Navigation, ChevronLeft } from "lucide-react";
 import BottomNav from "../../../components/BottomNav";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 export default function StoreDetailPage() {
   const router = useRouter();
 
-  const mockStock = [
-    { id: "1", name: "Toner (이지듀 EGF)", status: "High Stock", color: "text-emerald-500" },
-    { id: "2", name: "Spot Care (노스카나겔)", status: "Medium Stock", color: "text-amber-500" },
-    { id: "4", name: "Sunscreen (SPF 50+)", status: "Out of Stock", color: "text-red-400" },
-  ];
-
   return (
-    <div className="flex-1 flex flex-col min-h-screen bg-stone-50 pb-24">
+    <div className="flex-1 flex flex-col min-h-screen bg-slate-950 pb-24 text-white relative">
+      
+      {/* Store Header Image */}
+      <div className="absolute top-0 left-0 w-full h-[300px] z-0">
+         <img src="/images/sample/Seoul Cityscape, South Korea Travel Inspiration.jpeg" alt="Seoul" className="w-full h-full object-cover opacity-40" />
+         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent" />
+      </div>
+
       {/* Header */}
-      <div className="p-6 flex justify-between items-center bg-white shadow-sm">
-        <div className="flex items-center gap-3">
-          <button onClick={() => router.back()} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-stone-100 transition-colors">
-            <ChevronLeft className="w-5 h-5 text-stone-600" />
-          </button>
-          <span className="font-medium text-stone-800">Myeongdong Main Store</span>
-        </div>
-        <button className="text-stone-400 hover:text-red-500 transition-colors">
-          <Heart className="w-5 h-5" />
+      <div className="p-6 pb-4 flex justify-between items-center relative z-10 pt-10">
+        <button onClick={() => router.back()} className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-900/80 backdrop-blur border border-white/10 shadow-sm hover:bg-slate-800 transition-colors">
+          <ChevronLeft className="w-6 h-6 text-white" />
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
-        {/* Store Info Banner */}
-        <div className="bg-white p-6 border-b border-stone-100">
-          <div className="flex gap-2 mb-4">
-             <span className="px-2 py-1 bg-[#eef1ed] text-primary-dark text-xs font-semibold tracking-wider rounded">OLIVE YOUNG</span>
-             <span className="px-2 py-1 bg-stone-100 text-stone-500 text-xs font-semibold tracking-wider rounded">★ 4.9 (120 REVIEWS)</span>
+      <div className="flex-1 px-6 relative z-10 mt-10">
+        {/* Store Title Section */}
+        <div className="mb-8 flex justify-between items-start">
+          <div>
+            <span className="inline-block px-2 py-1 bg-violet-600 text-white text-[10px] font-bold rounded mb-2 shadow-[0_0_10px_rgba(124,58,237,0.5)]">OLIVE YOUNG</span>
+            <h1 className="text-4xl font-playfair font-bold text-white mb-2 leading-tight">Myeongdong <br/>Main</h1>
+            <p className="text-xs text-slate-300 font-medium">Tax Free | English Available</p>
           </div>
-          <h1 className="text-2xl font-serif text-stone-800 mb-2">Olive Young Myeongdong</h1>
-          <p className="text-sm text-stone-400">Tax Free Center | English Available</p>
+          
+          {/* Match Score Badge */}
+          <div className="w-20 h-20 rounded-full border-4 border-pink-500 flex flex-col items-center justify-center bg-slate-900/80 backdrop-blur shadow-[0_0_20px_rgba(236,72,153,0.4)] shrink-0">
+             <span className="text-[10px] text-pink-400 font-bold mt-1 tracking-widest">SCORE</span>
+             <span className="text-2xl font-bold text-white -mt-1">80%</span>
+          </div>
         </div>
 
         {/* Products From My List */}
-        <div className="p-6">
-          <h2 className="text-sm font-bold tracking-wider text-stone-500 mb-6">PRODUCTS FROM MY LIST</h2>
+        <div className="bg-white/5 backdrop-blur-md rounded-3xl p-6 shadow-xl border border-white/10">
+          <p className="text-sm font-bold text-white mb-6 flex justify-between items-center">
+            Products From My List 
+            <span className="text-xs bg-pink-500/20 text-pink-400 px-2 py-1 rounded-full border border-pink-500/30">4 / 5 Available</span>
+          </p>
           
-          <div className="space-y-3">
-            {mockStock.map((item) => (
-              <div key={item.id} className="bg-white border border-stone-200 rounded-xl p-4 flex justify-between items-center shadow-sm">
-                <div className="flex items-center gap-3">
-                   <div className="w-4 h-4 border border-stone-300 rounded-sm flex items-center justify-center">
-                     {item.status !== "Out of Stock" && <div className="w-2 h-2 bg-stone-400 rounded-sm" />}
-                   </div>
-                   <span className={`text-sm ${item.status === "Out of Stock" ? 'text-stone-400 line-through' : 'text-stone-700'}`}>
-                     {item.name}
-                   </span>
-                </div>
-                <span className={`text-xs font-bold ${item.color}`}>
-                  {item.status}
-                </span>
-              </div>
-            ))}
+          <div className="space-y-4">
+            {/* Item 1 */}
+            <div className="flex justify-between items-center pb-4 border-b border-white/10">
+              <span className="text-sm font-medium text-slate-200">☑ Toner (이지듀 EGF)</span>
+              <span className="text-[11px] font-bold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-1 rounded">High Stock</span>
+            </div>
+            {/* Item 2 */}
+            <div className="flex justify-between items-center pb-4 border-b border-white/10">
+              <span className="text-sm font-medium text-slate-200">☑ Spot Care (노스카나)</span>
+              <span className="text-[11px] font-bold text-amber-400 bg-amber-400/10 border border-amber-400/20 px-2 py-1 rounded">Med Stock</span>
+            </div>
+            {/* Item 3 */}
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium text-slate-500">☐ Sunscreen (SPF 50+)</span>
+              <span className="text-[11px] font-bold text-rose-400 bg-rose-400/10 border border-rose-400/20 px-2 py-1 rounded">Out of Stock</span>
+            </div>
           </div>
         </div>
 
         {/* Direct Navigation CTA */}
-        <div className="px-6 mt-4">
-          <button className="w-full bg-primary text-white py-4 rounded-xl font-medium hover:bg-primary-dark transition-colors flex items-center justify-center gap-2 shadow-sm">
-            <Navigation className="w-5 h-5" fill="currentColor" />
-            Open Navigation
+        <div className="mt-8">
+          <button className="w-full bg-white text-slate-950 py-4 rounded-full font-bold hover:bg-slate-200 transition-colors flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.2)] text-lg">
+            <Navigation className="w-5 h-5" /> Open Navigation
           </button>
         </div>
       </div>

@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #5b705c;
-  --color-primary-dark: #4b5d4c;
-  --color-background: #fafaf9;
-  --color-foreground: #292524;
+  --color-primary: #0f172a; /* slate-900 */
+  --color-secondary: #020617; /* slate-950 */
+  --color-accent: #db2777; /* pink-600 */
+  --color-text-dark: #f8fafc; /* text-white for dark mode */
 }
 
 body {
-  background-color: var(--color-background);
-  color: var(--color-foreground);
+  background-color: var(--color-secondary);
+  color: var(--color-text-dark);
   -webkit-tap-highlight-color: transparent;
 }

@@ -6,15 +6,36 @@ import { useBeautyStore } from "../../store/useBeautyStore";
 
 export default function BeautyMatchPage() {
   const router = useRouter();
-  const { skinType, setSkinType } = useBeautyStore();
+  const { skinType, setSkinType, concerns, setConcerns, budget, setBudget } = useBeautyStore();
   const [step, setStep] = useState(1);
 
   const skinTypes = [
-    { id: "dry", label: "Dry (건성)" },
-    { id: "oily", label: "Oily (지성)" },
-    { id: "combination", label: "Combination (복합성)" },
-    { id: "sensitive", label: "Sensitive (민감성)" },
+    { id: "dry", label: "Dry" },
+    { id: "oily", label: "Oily" },
+    { id: "combination", label: "Combination" },
+    { id: "sensitive", label: "Sensitive" },
   ];
+
+  const concernOptions = [
+    { id: "acne", label: "Acne" },
+    { id: "brightening", label: "Brightening" },
+    { id: "anti-aging", label: "Anti-Aging" },
+    { id: "moisturizing", label: "Moisturizing" },
+  ];
+
+  const budgetOptions = [
+    { id: "50", label: "Under $50", value: 50 },
+    { id: "100", label: "Under $100", value: 100 },
+    { id: "premium", label: "Premium", value: 999 },
+  ];
+
+  const toggleConcern = (id: string) => {
+    if (concerns.includes(id)) {
+      setConcerns(concerns.filter(c => c !== id));
+    } else {
+      setConcerns([...concerns, id]);
+    }
+  };
 
   const handleNext = () => {
     if (step < 3) {
@@ -25,45 +46,48 @@ export default function BeautyMatchPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col p-6 min-h-screen">
+    <div className="flex-1 flex flex-col p-6 min-h-screen bg-slate-950 text-white relative overflow-hidden">
+      {/* Background Glow */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-violet-600/20 rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute bottom-1/4 left-0 w-64 h-64 bg-pink-600/10 rounded-full blur-[80px] pointer-events-none" />
+
       {/* Header */}
-      <div className="flex justify-between items-center py-4">
-        <span className="text-sm font-medium text-stone-500">Beauty Match ({step}/3)</span>
-        <span className="text-sm font-medium text-stone-500">Step {step}</span>
+      <div className="relative z-10 flex justify-between items-center py-4 mb-4">
+        <span className="text-sm font-semibold text-slate-400">Beauty Match ({step}/3)</span>
+        <span className="text-sm font-bold bg-white/10 px-3 py-1 rounded-full text-pink-400 border border-white/10">Step {step}</span>
       </div>
 
       {/* Progress Bar */}
-      <div className="w-full bg-stone-200 h-1.5 rounded-full mb-8">
+      <div className="relative z-10 w-full bg-slate-800 h-2 rounded-full mb-10 shadow-inner overflow-hidden">
         <div 
-          className="bg-primary h-1.5 rounded-full transition-all duration-300"
+          className="bg-gradient-to-r from-violet-500 to-pink-500 h-2 rounded-full transition-all duration-500 ease-out"
           style={{ width: `${(step / 3) * 100}%` }}
         />
       </div>
 
       {/* Main Content */}
-      <div className="flex-1">
+      <div className="relative z-10 flex-1">
         {step === 1 && (
-          <div className="space-y-6">
-            <span className="text-xs font-semibold tracking-wider text-primary bg-primary/10 px-2 py-1 rounded">SKIN TYPE</span>
-            <h2 className="text-2xl font-serif text-stone-800">What's your skin type?</h2>
+          <div className="space-y-6 animate-fade-in">
+            <h2 className="text-4xl font-playfair font-bold text-white leading-tight">What's Your <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-pink-400">Skin Type?</span></h2>
             
-            <div className="space-y-3 mt-8">
+            <div className="space-y-4 mt-8">
               {skinTypes.map((type) => (
                 <button
                   key={type.id}
                   onClick={() => setSkinType(type.id)}
-                  className={`w-full text-left px-4 py-4 rounded-xl border transition-colors flex items-center gap-3 ${
+                  className={`w-full text-left px-5 py-5 rounded-2xl border transition-all flex items-center gap-4 ${
                     skinType === type.id 
-                      ? 'border-primary bg-[#eef1ed] text-primary-dark' 
-                      : 'border-stone-200 hover:border-primary/50 text-stone-600 bg-white'
+                      ? 'border-pink-500/50 bg-pink-500/10 shadow-[0_0_20px_rgba(236,72,153,0.15)] text-white' 
+                      : 'border-white/10 bg-slate-900/50 hover:bg-slate-800 text-slate-300'
                   }`}
                 >
-                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                    skinType === type.id ? 'border-primary' : 'border-stone-300'
+                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                    skinType === type.id ? 'border-pink-500' : 'border-slate-500'
                   }`}>
-                    {skinType === type.id && <div className="w-2 h-2 bg-primary rounded-full" />}
+                    {skinType === type.id && <div className="w-2.5 h-2.5 bg-pink-500 rounded-full" />}
                   </div>
-                  <span className="font-medium">{type.label}</span>
+                  <span className="text-lg font-semibold">{type.label}</span>
                 </button>
               ))}
             </div>
@@ -71,15 +95,21 @@ export default function BeautyMatchPage() {
         )}
 
         {step === 2 && (
-          <div className="space-y-6">
-            <span className="text-xs font-semibold tracking-wider text-primary bg-primary/10 px-2 py-1 rounded">CONCERNS</span>
-            <h2 className="text-2xl font-serif text-stone-800">Any specific concerns?</h2>
-            <p className="text-stone-500 text-sm">Select all that apply.</p>
-            {/* Placeholder for concerns */}
-            <div className="grid grid-cols-2 gap-3 mt-8">
-               {['Acne', 'Wrinkles', 'Pores', 'Pigmentation'].map((concern) => (
-                 <button key={concern} className="p-4 rounded-xl border border-stone-200 text-center bg-white hover:border-primary/50 text-stone-600">
-                    {concern}
+          <div className="space-y-6 animate-fade-in">
+            <h2 className="text-4xl font-playfair font-bold text-white leading-tight">Your Main <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-pink-400">Concern?</span></h2>
+            
+            <div className="grid grid-cols-2 gap-4 mt-8">
+               {concernOptions.map((opt) => (
+                 <button 
+                   key={opt.id} 
+                   onClick={() => toggleConcern(opt.id)}
+                   className={`p-5 rounded-2xl border text-center transition-all ${
+                     concerns.includes(opt.id) 
+                       ? 'border-pink-500/50 bg-pink-500/10 shadow-[0_0_20px_rgba(236,72,153,0.15)] text-white font-bold' 
+                       : 'border-white/10 bg-slate-900/50 hover:bg-slate-800 text-slate-300 font-medium'
+                   }`}
+                 >
+                    {opt.label}
                  </button>
                ))}
             </div>
@@ -87,24 +117,35 @@ export default function BeautyMatchPage() {
         )}
 
         {step === 3 && (
-          <div className="space-y-6">
-            <span className="text-xs font-semibold tracking-wider text-primary bg-primary/10 px-2 py-1 rounded">BUDGET</span>
-            <h2 className="text-2xl font-serif text-stone-800">What's your budget?</h2>
-            {/* Placeholder for budget */}
-            <div className="py-12 flex justify-center">
-               <span className="text-4xl font-serif text-stone-800">$100</span>
+          <div className="space-y-6 animate-fade-in">
+            <h2 className="text-4xl font-playfair font-bold text-white leading-tight">Shopping <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-pink-400">Budget</span></h2>
+            
+            <div className="space-y-4 mt-8">
+              {budgetOptions.map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => setBudget(opt.value)}
+                  className={`w-full text-center px-5 py-5 rounded-2xl border transition-all ${
+                    budget === opt.value 
+                      ? 'border-pink-500/50 bg-pink-500/10 shadow-[0_0_20px_rgba(236,72,153,0.15)] text-white font-bold' 
+                      : 'border-white/10 bg-slate-900/50 hover:bg-slate-800 text-slate-300 font-medium'
+                  }`}
+                >
+                  <span className="text-lg">{opt.label}</span>
+                </button>
+              ))}
             </div>
           </div>
         )}
       </div>
 
       {/* Bottom CTA */}
-      <div className="mt-8 mb-8">
+      <div className="relative z-10 mt-8 mb-8">
         <button 
           onClick={handleNext}
-          className="w-full bg-stone-900 text-white py-4 rounded-xl text-center font-medium hover:bg-black transition-colors"
+          className="w-full bg-gradient-to-r from-violet-600 to-pink-600 text-white py-4 rounded-full font-bold text-lg hover:shadow-[0_0_20px_rgba(236,72,153,0.4)] transition-all active:scale-95"
         >
-          {step === 3 ? 'Generate My List' : `Next Step (${step + 1}/3)`}
+          {step === 3 ? 'Generate My List' : 'Next Step'}
         </button>
       </div>
     </div>

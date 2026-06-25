@@ -2,23 +2,21 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckSquare, Square, Apple, Mail } from "lucide-react";
-import { useBeautyStore } from "../../store/useBeautyStore";
+import { CheckSquare, Square, Apple, Mail, MapPin, Sparkles, Gift } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function ShoppingListPage() {
   const router = useRouter();
   const [showSaveOverlay, setShowSaveOverlay] = useState(false);
   
-  // Hardcoded for MVP, in real app would generate based on store
   const mockProducts = [
-    { id: "1", name: "Toner (이지듀 EGF)" },
-    { id: "2", name: "Spot Care (노스카나겔)" },
-    { id: "3", name: "Serum (시카 에센스)" },
-    { id: "4", name: "Sunscreen (SPF 50+)" }
+    { id: "1", name: "Toner (이지듀 EGF)", checked: true },
+    { id: "2", name: "Spot Care (노스카나겔)", checked: true },
+    { id: "3", name: "Serum (시카에센스)", checked: false },
+    { id: "4", name: "Sunscreen (SPF50+)", checked: false }
   ];
 
-  const [checked, setChecked] = useState<string[]>(["1", "2"]);
+  const [checked, setChecked] = useState<string[]>(mockProducts.filter(p => p.checked).map(p => p.id));
 
   const toggleCheck = (id: string) => {
     if (checked.includes(id)) {
@@ -33,61 +31,60 @@ export default function ShoppingListPage() {
   };
 
   const handleAuth = () => {
-    // Navigate to dashboard after login/save
     router.push("/dashboard");
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen relative">
-      <div className="p-6 flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col min-h-screen relative bg-slate-950 overflow-hidden">
+      {/* Cinematic Background */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-violet-900/20 via-slate-950 to-slate-950 pointer-events-none" />
+
+      <div className="p-6 flex-1 flex flex-col pb-24 relative z-10">
         {/* Header */}
-        <div className="flex justify-between items-center py-4">
-          <span className="text-lg font-serif text-stone-800">My Korea Beauty List</span>
-          <div className="w-8 h-8 bg-stone-200 rounded-full flex items-center justify-center">
-             <div className="w-4 h-4 bg-primary rounded-sm" />
+        <div className="flex justify-center items-center py-6">
+          <h1 className="text-2xl font-playfair text-white font-bold tracking-wide">My Shopping List</h1>
+        </div>
+
+        {/* Cyber Ticket Layout Card */}
+        <div className="bg-slate-900/60 backdrop-blur-md rounded-3xl p-6 flex flex-col shadow-2xl border border-white/10 relative">
+          
+          {/* Circular Cutouts for Ticket Effect */}
+          <div className="absolute top-1/3 -left-4 w-8 h-8 bg-slate-950 rounded-full border-r border-white/10" />
+          <div className="absolute top-1/3 -right-4 w-8 h-8 bg-slate-950 rounded-full border-l border-white/10" />
+
+          <div className="text-center mb-8 pb-8 border-b-2 border-dashed border-white/10">
+            <span className="text-xs font-bold text-violet-400 mb-1 block tracking-widest">ESTIMATED BUDGET</span>
+            <span className="text-5xl font-playfair text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-amber-300 font-bold">$85.00</span>
           </div>
-        </div>
 
-        {/* Budget Card */}
-        <div className="mt-6 bg-white border border-stone-200 rounded-2xl p-6 flex flex-col items-center justify-center shadow-sm">
-          <span className="text-sm text-stone-400 mb-2">Estimated Budget</span>
-          <span className="text-4xl font-serif text-primary-dark">$85.00</span>
-        </div>
+          {/* Checklist */}
+          <div className="space-y-5 flex-1 px-2">
+            {mockProducts.map((product) => (
+              <button 
+                key={product.id}
+                onClick={() => toggleCheck(product.id)}
+                className="w-full flex items-center gap-4 text-left group"
+              >
+                {checked.includes(product.id) ? (
+                  <CheckSquare className="w-6 h-6 text-pink-500" />
+                ) : (
+                  <Square className="w-6 h-6 text-slate-600 group-hover:text-pink-500/50" />
+                )}
+                <span className={`text-base font-medium ${checked.includes(product.id) ? 'text-white' : 'text-slate-400'}`}>
+                  {product.name}
+                </span>
+              </button>
+            ))}
+          </div>
 
-        {/* Checklist */}
-        <div className="mt-8 space-y-4 flex-1">
-          {mockProducts.map((product) => (
+          <div className="mt-10">
             <button 
-              key={product.id}
-              onClick={() => toggleCheck(product.id)}
-              className="w-full flex items-center gap-3 text-left group"
+               onClick={handleSaveList}
+               className="w-full bg-white text-slate-950 py-4 rounded-full font-bold text-lg hover:bg-slate-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.2)]"
             >
-              {checked.includes(product.id) ? (
-                <CheckSquare className="w-5 h-5 text-primary" />
-              ) : (
-                <Square className="w-5 h-5 text-stone-300 group-hover:text-primary/50" />
-              )}
-              <span className={`text-stone-700 ${checked.includes(product.id) ? 'font-medium' : ''}`}>
-                {product.name}
-              </span>
+              Save My List
             </button>
-          ))}
-        </div>
-
-        {/* Actions */}
-        <div className="mt-8 space-y-3 mb-8">
-          <button 
-             onClick={() => router.push("/map")}
-             className="w-full bg-primary text-white py-4 rounded-xl font-medium hover:bg-primary-dark transition-colors"
-          >
-            Find Nearby Stores
-          </button>
-          <button 
-             onClick={handleSaveList}
-             className="w-full bg-white border border-stone-200 text-stone-600 py-4 rounded-xl font-medium hover:bg-stone-50 transition-colors"
-          >
-            Save My List
-          </button>
+          </div>
         </div>
       </div>
 
@@ -99,7 +96,7 @@ export default function ShoppingListPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-stone-900/40 z-40"
+              className="absolute inset-0 bg-slate-950/80 z-40 backdrop-blur-sm"
               onClick={() => setShowSaveOverlay(false)}
             />
             <motion.div 
@@ -107,24 +104,43 @@ export default function ShoppingListPage() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="absolute bottom-0 left-0 right-0 bg-stone-50 rounded-t-3xl z-50 p-6 pb-12 shadow-2xl"
+              className="absolute bottom-0 left-0 right-0 bg-slate-900 border-t border-white/10 rounded-t-[40px] z-50 p-8 pb-12 shadow-2xl"
             >
-              <div className="w-12 h-1.5 bg-stone-300 rounded-full mx-auto mb-8" />
+              <div className="w-12 h-1.5 bg-slate-700 rounded-full mx-auto mb-8" />
               
-              <h3 className="text-2xl font-serif text-center text-stone-800 mb-8 leading-tight">
-                Save Your List & Get<br />Coupons
+              <h3 className="text-3xl font-playfair text-center text-white mb-8 font-bold">
+                Save Your Beauty<br/>Journey ✨
               </h3>
 
+              <div className="space-y-4 mb-8 bg-white/5 border border-white/10 p-6 rounded-2xl shadow-sm">
+                <div className="flex items-center gap-3 text-sm font-medium text-slate-200">
+                  <Sparkles className="w-5 h-5 text-pink-400" />
+                  Save Your Shopping List
+                </div>
+                <div className="flex items-center gap-3 text-sm font-medium text-slate-200">
+                  <Gift className="w-5 h-5 text-amber-400" />
+                  Get Exclusive Tax-Free Coupons
+                </div>
+                <div className="flex items-center gap-3 text-sm font-medium text-slate-200">
+                  <MapPin className="w-5 h-5 text-violet-400" />
+                  Access Nearby Beauty Stores
+                </div>
+                <div className="flex items-center gap-3 text-sm font-medium text-slate-200">
+                  <CheckSquare className="w-5 h-5 text-pink-400" />
+                  Unlock Beauty Experiences
+                </div>
+              </div>
+
               <div className="space-y-3">
-                <button onClick={handleAuth} className="w-full flex items-center justify-center gap-3 bg-white border border-stone-200 text-stone-700 py-4 rounded-xl font-medium hover:bg-stone-50">
+                <button onClick={handleAuth} className="w-full flex items-center justify-center gap-3 bg-white text-slate-950 py-4 rounded-full font-bold shadow-sm hover:bg-slate-200">
                   <span className="font-bold text-lg">G</span>
                   Continue with Google
                 </button>
-                <button onClick={handleAuth} className="w-full flex items-center justify-center gap-3 bg-stone-900 text-white py-4 rounded-xl font-medium hover:bg-black">
+                <button onClick={handleAuth} className="w-full flex items-center justify-center gap-3 bg-slate-800 border border-white/10 text-white py-4 rounded-full font-bold shadow-sm hover:bg-slate-700">
                   <Apple className="w-5 h-5" />
                   Continue with Apple
                 </button>
-                <button onClick={handleAuth} className="w-full flex items-center justify-center gap-3 bg-primary text-white py-4 rounded-xl font-medium hover:bg-primary-dark">
+                <button onClick={handleAuth} className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-violet-600 to-pink-600 text-white py-4 rounded-full font-bold shadow-sm hover:bg-opacity-90">
                   <Mail className="w-5 h-5" />
                   Sign up with Email
                 </button>
