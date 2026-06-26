@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
   output: 'export',
   trailingSlash: true,
   devIndicators: false,
-  // 💡 아래 내용을 추가하세요
+
   webpack: (config, { dev }) => {
     if (!dev) {
       config.cache = false;
