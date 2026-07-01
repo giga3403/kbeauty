@@ -1,6 +1,6 @@
 "use client";
 
-import { Navigation, ChevronLeft } from "lucide-react";
+import { Navigation, ChevronLeft, Heart } from "lucide-react";
 import BottomNav from "../../../components/BottomNav";
 import { useRouter } from "next/navigation";
 
@@ -21,54 +21,61 @@ export default function StoreDetailClient() {
         <button onClick={() => router.back()} className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-900/80 backdrop-blur border border-white/10 shadow-sm hover:bg-slate-800 transition-colors">
           <ChevronLeft className="w-6 h-6 text-white" />
         </button>
+        <h2 className="text-lg font-bold text-white">Myeongdong Main Store</h2>
+        <button className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-900/80 backdrop-blur border border-white/10 shadow-sm hover:bg-slate-800 transition-colors">
+          <Heart className="w-5 h-5 text-white" />
+        </button>
       </div>
 
-      <div className="flex-1 px-6 relative z-10 mt-10">
+      <div className="flex-1 px-6 relative z-10 mt-6">
         {/* Store Title Section */}
-        <div className="mb-8 flex justify-between items-start">
-          <div>
-            <span className="inline-block px-2 py-1 bg-violet-600 text-white text-[10px] font-bold rounded mb-2 shadow-[0_0_10px_rgba(124,58,237,0.5)]">OLIVE YOUNG</span>
-            <h1 className="text-4xl font-playfair font-bold text-white mb-2 leading-tight">Myeongdong <br/>Main</h1>
-            <p className="text-xs text-slate-300 font-medium">Tax Free | English Available</p>
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-3">
+            <span className="inline-block px-2 py-1 bg-[#60735E]/20 text-[#8B9D89] text-[10px] font-bold rounded border border-[#60735E]/30 tracking-wider">OLIVE YOUNG</span>
+            <span className="text-xs font-semibold text-[#8B9D89] flex items-center gap-1">★ 4.9 <span className="text-slate-400 font-normal">(120 REVIEWS)</span></span>
           </div>
-          
-          {/* Match Score Badge */}
-          <div className="w-20 h-20 rounded-full border-4 border-pink-500 flex flex-col items-center justify-center bg-slate-900/80 backdrop-blur shadow-[0_0_20px_rgba(236,72,153,0.4)] shrink-0">
-             <span className="text-[10px] text-pink-400 font-bold mt-1 tracking-widest">SCORE</span>
-             <span className="text-2xl font-bold text-white -mt-1">80%</span>
-          </div>
+          <h1 className="text-3xl font-playfair font-bold text-white mb-2">Olive Young Myeongdong</h1>
+          <p className="text-xs text-slate-400 font-medium">English Available</p>
         </div>
 
         {/* Products From My List */}
-        <div className="bg-white/5 backdrop-blur-md rounded-3xl p-6 shadow-xl border border-white/10">
-          <p className="text-sm font-bold text-white mb-6 flex justify-between items-center">
-            Products From My List 
-            <span className="text-xs bg-pink-500/20 text-pink-400 px-2 py-1 rounded-full border border-pink-500/30">4 / 5 Available</span>
+        <div className="bg-white/5 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/10">
+          <p className="text-sm font-semibold text-slate-300 mb-4 border-b border-white/10 pb-4">
+            Products From My List
           </p>
           
           <div className="space-y-4">
             {/* Item 1 */}
             <div className="flex justify-between items-center pb-4 border-b border-white/10">
-              <span className="text-sm font-medium text-slate-200">☑ Toner (이지듀 EGF)</span>
-              <span className="text-[11px] font-bold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-1 rounded">High Stock</span>
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input type="checkbox" className="w-4 h-4 rounded bg-slate-800 border-white/20 checked:bg-violet-500 accent-violet-500" defaultChecked />
+                <span className="text-sm font-medium text-slate-200">Toner (이지듀 EGF)</span>
+              </label>
+              <span className="text-[11px] font-bold text-emerald-400">High Stock</span>
             </div>
             {/* Item 2 */}
             <div className="flex justify-between items-center pb-4 border-b border-white/10">
-              <span className="text-sm font-medium text-slate-200">☑ Spot Care (노스카나)</span>
-              <span className="text-[11px] font-bold text-amber-400 bg-amber-400/10 border border-amber-400/20 px-2 py-1 rounded">Med Stock</span>
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input type="checkbox" className="w-4 h-4 rounded bg-slate-800 border-white/20 checked:bg-violet-500 accent-violet-500" defaultChecked />
+                <span className="text-sm font-medium text-slate-200">Spot Care (노스카나겔)</span>
+              </label>
+              <span className="text-[11px] font-bold text-amber-400">Medium Stock</span>
             </div>
             {/* Item 3 */}
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-slate-500">☐ Sunscreen (SPF 50+)</span>
-              <span className="text-[11px] font-bold text-rose-400 bg-rose-400/10 border border-rose-400/20 px-2 py-1 rounded">Out of Stock</span>
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input type="checkbox" className="w-4 h-4 rounded bg-slate-800 border-white/20 accent-violet-500" />
+                <span className="text-sm font-medium text-slate-500">Sunscreen (SPF 50+)</span>
+              </label>
+              <span className="text-[11px] font-bold text-rose-400">Out of Stock</span>
             </div>
           </div>
         </div>
 
         {/* Direct Navigation CTA */}
         <div className="mt-8">
-          <button className="w-full bg-white text-slate-950 py-4 rounded-full font-bold hover:bg-slate-200 transition-colors flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.2)] text-lg">
-            <Navigation className="w-5 h-5" /> Open Navigation
+          <button className="w-full bg-[#60735E] text-white py-4 rounded-xl font-bold hover:bg-[#4a5a48] transition-colors flex items-center justify-center gap-2 shadow-lg text-base">
+            <span className="text-lg">⬦</span> Open Navigation
           </button>
         </div>
       </div>

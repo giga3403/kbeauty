@@ -6,7 +6,7 @@ const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfa
 const notoSansKR = Noto_Sans_KR({ subsets: ["latin"], weight: ["400", "500", "700"], variable: "--font-noto" });
 
 export const metadata: Metadata = {
-  title: "Beauty Passport",
+  title: "Beauty Companion",
   description: "Your K-Beauty Journey Ticket",
   manifest: "/manifest.json",
 };

@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export default function MapPage() {
   const [activeFilter, setActiveFilter] = useState("Olive Young");
-  const filters = ["Olive Young", "Beauty Pharmacy", "Personal Color", "Idol Makeup", "Skin Clinic", "Tax Free"];
+  const filters = ["Olive Young", "Beauty Pharmacy", "Personal Color", "Idol Makeup", "Skin Clinic"];
 
   return (
     <div className="flex-1 flex flex-col min-h-screen bg-slate-950 relative overflow-hidden">
@@ -73,8 +73,7 @@ export default function MapPage() {
             <h3 className="font-playfair font-semibold text-white text-lg mb-1">Myeongdong Main</h3>
             <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
               <span className="flex items-center gap-1 text-pink-400"><Navigation className="w-3 h-3" /> 2 min walk</span>
-              <span>|</span>
-              <span>Tax Free</span>
+
             </div>
           </div>
           <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-pink-500 group-hover:text-white transition-colors text-white border border-white/20">

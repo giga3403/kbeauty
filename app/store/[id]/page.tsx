@@ -6,7 +6,7 @@ export function generateStaticParams() {
     { id: '1' },
     { id: '2' },
     { id: '3' },
-    { id: 'myeongdong' }
+    { id: 'olive-young-myeongdong' }
   ];
 }
 

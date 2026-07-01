@@ -27,19 +27,6 @@ export default function SuccessPage() {
         <h1 className="text-3xl font-serif text-stone-800 text-center mb-2">Beauty Mission<br/>Complete!</h1>
         <p className="text-stone-500 text-sm mb-12">5 out of 5 Skincare Items Purchased</p>
 
-        {/* Refund Card */}
-        <div className="w-full bg-white border border-stone-200 rounded-2xl p-6 shadow-sm flex flex-col items-center">
-          <span className="text-xs font-semibold tracking-wider text-stone-400 mb-2">ESTIMATED TAX REFUND SAVING</span>
-          <span className="text-2xl font-serif text-primary-dark mb-6">~ 7,000 KRW Saved</span>
-          
-          {/* Mock Barcode */}
-          <div className="w-full h-16 bg-stone-100 rounded flex items-center justify-center space-x-1 px-4 overflow-hidden mb-2 opacity-50">
-             {[...Array(30)].map((_, i) => (
-                <div key={i} className="bg-stone-800 h-full" style={{ width: Math.random() > 0.5 ? '4px' : '2px', opacity: Math.random() > 0.5 ? 1 : 0.8 }} />
-             ))}
-          </div>
-          <span className="text-[10px] text-stone-400 tracking-[0.2em]">K-BEAUTY-REFUND-001</span>
-        </div>
       </div>
 
       {/* Action Button */}

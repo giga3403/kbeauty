@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles, ShoppingBag, Music } from "lucide-react";
+import { Sparkles, ShoppingBag, Gift } from "lucide-react";
 
 export default function LandingPage() {
   return (
@@ -19,7 +19,7 @@ export default function LandingPage() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-pink-400 opacity-75"></span>
               <span className="relative inline-flex h-2 w-2 rounded-full bg-pink-500"></span>
             </span>
-            K-Vibe Beauty Passport
+            K-Vibe Beauty Companion
           </div>
           
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight mb-3 font-playfair">
@@ -39,29 +39,29 @@ export default function LandingPage() {
             <div className="bg-violet-500/20 p-2 rounded-full">
                <Sparkles className="w-4 h-4 text-pink-400" />
             </div>
-            <span className="text-sm font-semibold text-slate-200">Personalized AI Journey</span>
+            <span className="text-sm font-semibold text-slate-200">Find Your Perfect AI Routine</span>
           </div>
           <div className="flex items-center gap-4">
             <div className="bg-pink-500/20 p-2 rounded-full">
                <ShoppingBag className="w-4 h-4 text-pink-400" />
             </div>
-            <span className="text-sm font-semibold text-slate-200">Real-time Stock Match</span>
+            <span className="text-sm font-semibold text-slate-200">Check Nearby Store Stock</span>
           </div>
           <div className="flex items-center gap-4">
             <div className="bg-amber-500/20 p-2 rounded-full">
-               <Music className="w-4 h-4 text-amber-300" />
+               <Gift className="w-4 h-4 text-amber-300" />
             </div>
-            <span className="text-sm font-semibold text-slate-200">K-POP Experiences</span>
+            <span className="text-sm font-semibold text-slate-200">Unlock Exclusive Benefits</span>
           </div>
         </div>
 
         {/* Floating Image Collage (Mobile friendly size) */}
         <div className="relative flex-1 min-h-[120px] w-full mb-4 mt-auto">
            <div className="absolute left-1/2 -translate-x-[105%] top-0 w-28 h-36 rounded-2xl overflow-hidden border border-white/10 shadow-lg -rotate-6 z-10">
-              <img src="/images/sample/karina aespa.jpeg" alt="K-pop" className="w-full h-full object-cover" />
+              <img src="/images/sample/vibe1.png" alt="K-beauty Vibe" className="w-full h-full object-cover" />
            </div>
            <div className="absolute left-1/2 translate-x-[5%] top-6 w-32 h-28 rounded-2xl overflow-hidden border border-white/10 shadow-lg rotate-3 z-20">
-              <img src="/images/sample/Seoul Cityscape, South Korea Travel Inspiration.jpeg" alt="Seoul" className="w-full h-full object-cover" />
+              <img src="/images/sample/vibe2.png" alt="Seoul Vibe" className="w-full h-full object-cover" />
            </div>
         </div>
       </div>

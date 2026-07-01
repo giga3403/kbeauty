@@ -11,7 +11,6 @@ export default function BottomNav() {
     { name: "Home", href: "/dashboard", icon: Home },
     { name: "List", href: "/list", icon: ShoppingCart },
     { name: "Map", href: "/map", icon: MapPin },
-    { name: "Passport", href: "/passport", icon: Ticket },
     { name: "Profile", href: "/profile", icon: User },
   ];
 
