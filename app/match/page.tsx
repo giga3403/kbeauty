@@ -8,19 +8,23 @@ export default function BeautyMatchPage() {
   const router = useRouter();
   const { skinType, setSkinType, concerns, setConcerns, budget, setBudget } = useBeautyStore();
   const [step, setStep] = useState(1);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const skinTypes = [
-    { id: "dry", label: "Dry" },
-    { id: "oily", label: "Oily" },
-    { id: "combination", label: "Combination" },
-    { id: "sensitive", label: "Sensitive" },
+    { id: "Dry", label: "Dry" },
+    { id: "Oily", label: "Oily" },
+    { id: "Combination", label: "Combination" },
+    { id: "Sensitive", label: "Sensitive" },
+    { id: "Normal", label: "Normal" },
   ];
 
   const concernOptions = [
-    { id: "acne", label: "Acne" },
-    { id: "brightening", label: "Brightening" },
-    { id: "anti-aging", label: "Anti-Aging" },
-    { id: "moisturizing", label: "Moisturizing" },
+    { id: "Acne", label: "Acne & Trouble" },
+    { id: "Brightening", label: "Brightening" },
+    { id: "Aging", label: "Anti-Aging" },
+    { id: "Hydration", label: "Hydration & Moisture" },
+    { id: "Soothing", label: "Soothing & Calming" },
+    { id: "Pore Care", label: "Pore Care" },
   ];
 
   const budgetOptions = [
@@ -38,6 +42,17 @@ export default function BeautyMatchPage() {
   };
 
   const handleNext = () => {
+    if (step === 1 && !skinType) {
+      setErrorMsg("피부 타입을 먼저 선택해주세요.");
+      return;
+    }
+    if (step === 2 && concerns.length === 0) {
+      setErrorMsg("피부 고민을 하나 이상 선택해주세요.");
+      return;
+    }
+    
+    setErrorMsg("");
+    
     if (step < 3) {
       setStep(step + 1);
     } else {
@@ -141,6 +156,11 @@ export default function BeautyMatchPage() {
 
       {/* Bottom CTA */}
       <div className="relative z-10 mt-8 mb-8">
+        {errorMsg && (
+          <div className="text-pink-400 text-sm font-semibold mb-4 text-center animate-pulse">
+            {errorMsg}
+          </div>
+        )}
         <button 
           onClick={handleNext}
           className="w-full bg-gradient-to-r from-violet-600 to-pink-600 text-white py-4 rounded-full font-bold text-lg hover:shadow-[0_0_20px_rgba(236,72,153,0.4)] transition-all active:scale-95"

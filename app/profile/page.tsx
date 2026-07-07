@@ -1,9 +1,40 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "../../lib/supabase";
 import BottomNav from "../../components/BottomNav";
 import { User, Settings, Heart, Bell, ChevronRight, LogOut } from "lucide-react";
 
 export default function ProfilePage() {
+  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        setUser(session.user);
+      }
+
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        setUser(session?.user || null);
+      });
+
+      return () => subscription.unsubscribe();
+    };
+
+    fetchUser();
+  }, []);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.push("/");
+  };
+
+  const displayName = user?.user_metadata?.full_name || "Guest";
+  const avatarUrl = user?.user_metadata?.avatar_url || ""; // if empty, shows placeholder
+
   return (
     <div className="flex-1 flex flex-col min-h-screen bg-slate-950 text-white relative pb-24">
       {/* Header */}
@@ -14,13 +45,19 @@ export default function ProfilePage() {
       <div className="flex-1 px-6 space-y-6 relative z-10">
         {/* User Info Card */}
         <div className="bg-white/5 backdrop-blur-md rounded-3xl p-6 shadow-xl border border-white/10 flex items-center gap-5">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-violet-500 to-pink-500 flex items-center justify-center shadow-lg p-1 shrink-0">
-             <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center">
-                <User className="w-10 h-10 text-pink-400" />
-             </div>
+          <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-violet-500 to-pink-500 flex items-center justify-center shadow-lg p-1 shrink-0 overflow-hidden">
+             {avatarUrl ? (
+               <div className="w-full h-full rounded-full overflow-hidden bg-slate-900">
+                 <img src={avatarUrl} alt="Google Profile" className="w-full h-full object-cover" />
+               </div>
+             ) : (
+               <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center">
+                  <User className="w-10 h-10 text-pink-400" />
+               </div>
+             )}
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-white mb-1">Emily</h2>
+            <h2 className="text-2xl font-bold text-white mb-1">{displayName}</h2>
             <p className="text-sm text-pink-400 font-medium">Global Traveler</p>
             <div className="mt-2 inline-flex px-2 py-1 bg-white/10 rounded-full border border-white/10 text-[10px] font-bold text-slate-300">
                SKIN TYPE: DRY
@@ -62,9 +99,14 @@ export default function ProfilePage() {
         </div>
 
         {/* Logout Button */}
-        <button className="w-full mt-6 py-4 rounded-2xl border border-rose-500/30 bg-rose-500/10 text-rose-400 font-bold hover:bg-rose-500/20 transition-colors flex items-center justify-center gap-2">
-           <LogOut className="w-5 h-5" /> Sign Out
-        </button>
+        {user && (
+          <button 
+            onClick={handleSignOut}
+            className="w-full mt-6 py-4 rounded-2xl border border-rose-500/30 bg-rose-500/10 text-rose-400 font-bold hover:bg-rose-500/20 transition-colors flex items-center justify-center gap-2"
+          >
+             <LogOut className="w-5 h-5" /> Sign Out
+          </button>
+        )}
       </div>
 
       <BottomNav />

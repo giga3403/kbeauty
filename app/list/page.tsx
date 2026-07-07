@@ -1,22 +1,60 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { CheckSquare, Square, Apple, Mail, MapPin, Sparkles, Gift } from "lucide-react";
+import { CheckSquare, Square, Apple, Mail, MapPin, Sparkles, Gift, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useBeautyStore } from "../../store/useBeautyStore";
+import { supabase } from "../../lib/supabase";
 
 export default function ShoppingListPage() {
   const router = useRouter();
-  const [showSaveOverlay, setShowSaveOverlay] = useState(false);
+  const { skinType, concerns } = useBeautyStore();
   
-  const mockProducts = [
-    { id: "1", name: "Toner (이지듀 EGF)", checked: true },
-    { id: "2", name: "Spot Care (노스카나겔)", checked: true },
-    { id: "3", name: "Serum (시카에센스)", checked: false },
-    { id: "4", name: "Sunscreen (SPF50+)", checked: false }
-  ];
+  const [showSaveOverlay, setShowSaveOverlay] = useState(false);
+  const [products, setProducts] = useState<any[]>([]);
+  const [checked, setChecked] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const [checked, setChecked] = useState<string[]>(mockProducts.filter(p => p.checked).map(p => p.id));
+  useEffect(() => {
+    const fetchMatchedProducts = async () => {
+      setLoading(true);
+      
+      try {
+        let query = supabase.from('products').select('*');
+        
+        const orConditions = [];
+        if (skinType) {
+          orConditions.push(`skin_type.eq.${skinType}`);
+        }
+        if (concerns && concerns.length > 0) {
+          concerns.forEach(c => {
+            orConditions.push(`concern.eq.${c}`);
+          });
+        }
+        
+        if (orConditions.length > 0) {
+          query = query.or(orConditions.join(','));
+        }
+
+        const { data, error } = await query;
+        
+        if (error) {
+          console.error("Error fetching products:", error);
+        } else if (data) {
+          setProducts(data);
+          // 기본적으로 매칭된 모든 상품을 체크 상태로 만듭니다.
+          setChecked(data.map(p => p.id.toString()));
+        }
+      } catch (err) {
+        console.error("Unexpected error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMatchedProducts();
+  }, [skinType, concerns]);
 
   const toggleCheck = (id: string) => {
     if (checked.includes(id)) {
@@ -34,6 +72,31 @@ export default function ShoppingListPage() {
     router.push("/dashboard");
   };
 
+  const handleGoogleLogin = async () => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          // 환경에 맞게 리다이렉트 URL 자동 설정
+          redirectTo: `${window.location.origin}/dashboard`,
+          // 구글 로그인 시 항상 계정 선택창을 띄우도록 설정
+          queryParams: {
+            prompt: 'select_account'
+          }
+        }
+      });
+      if (error) throw error;
+    } catch (error) {
+      console.error("Google login error:", error);
+      alert("구글 로그인 중 오류가 발생했습니다.");
+    }
+  };
+
+  // 체크된 상품들의 총 가격 계산
+  const estimatedTotal = products
+    .filter(p => checked.includes(p.id.toString()))
+    .reduce((sum, p) => sum + Number(p.price), 0);
+
   return (
     <div className="flex-1 flex flex-col min-h-screen relative bg-slate-950 overflow-hidden">
       {/* Cinematic Background */}
@@ -46,41 +109,57 @@ export default function ShoppingListPage() {
         </div>
 
         {/* Cyber Ticket Layout Card */}
-        <div className="bg-slate-900/60 backdrop-blur-md rounded-3xl p-6 flex flex-col shadow-2xl border border-white/10 relative">
+        <div className="bg-slate-900/60 backdrop-blur-md rounded-3xl p-6 flex flex-col shadow-2xl border border-white/10 relative min-h-[400px]">
           
           {/* Circular Cutouts for Ticket Effect */}
-          <div className="absolute top-1/3 -left-4 w-8 h-8 bg-slate-950 rounded-full border-r border-white/10" />
-          <div className="absolute top-1/3 -right-4 w-8 h-8 bg-slate-950 rounded-full border-l border-white/10" />
+          <div className="absolute top-[30%] -left-4 w-8 h-8 bg-slate-950 rounded-full border-r border-white/10" />
+          <div className="absolute top-[30%] -right-4 w-8 h-8 bg-slate-950 rounded-full border-l border-white/10" />
 
           <div className="text-center mb-8 pb-8 border-b-2 border-dashed border-white/10">
-            <span className="text-xs font-bold text-violet-400 mb-1 block tracking-widest">ESTIMATED BUDGET</span>
-            <span className="text-5xl font-playfair text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-amber-300 font-bold">$85.00</span>
+            <span className="text-xs font-bold text-violet-400 mb-1 block tracking-widest">ESTIMATED TOTAL</span>
+            <span className="text-5xl font-playfair text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-amber-300 font-bold">
+              {estimatedTotal.toLocaleString()}원
+            </span>
           </div>
 
           {/* Checklist */}
-          <div className="space-y-5 flex-1 px-2">
-            {mockProducts.map((product) => (
-              <button 
-                key={product.id}
-                onClick={() => toggleCheck(product.id)}
-                className="w-full flex items-center gap-4 text-left group"
-              >
-                {checked.includes(product.id) ? (
-                  <CheckSquare className="w-6 h-6 text-pink-500" />
-                ) : (
-                  <Square className="w-6 h-6 text-slate-600 group-hover:text-pink-500/50" />
-                )}
-                <span className={`text-base font-medium ${checked.includes(product.id) ? 'text-white' : 'text-slate-400'}`}>
-                  {product.name}
-                </span>
-              </button>
-            ))}
+          <div className="space-y-4 flex-1 px-2 overflow-y-auto">
+            {loading ? (
+              <div className="flex flex-col items-center justify-center h-40 text-slate-400 space-y-3">
+                <Loader2 className="w-8 h-8 animate-spin text-pink-500" />
+                <p>AI Beauty Matching...</p>
+              </div>
+            ) : products.length > 0 ? (
+              products.map((product) => (
+                <button 
+                  key={product.id}
+                  onClick={() => toggleCheck(product.id.toString())}
+                  className="w-full flex items-center gap-4 text-left group bg-white/5 p-4 rounded-2xl hover:bg-white/10 transition-colors"
+                >
+                  {checked.includes(product.id.toString()) ? (
+                    <CheckSquare className="w-6 h-6 text-pink-500 shrink-0" />
+                  ) : (
+                    <Square className="w-6 h-6 text-slate-600 group-hover:text-pink-500/50 shrink-0" />
+                  )}
+                  <div className={`flex-1 ${checked.includes(product.id.toString()) ? 'opacity-100' : 'opacity-50'}`}>
+                    <div className="text-xs font-bold text-violet-400 mb-1">{product.brand} · {product.category}</div>
+                    <div className="text-base font-medium text-white line-clamp-1">{product.product_name}</div>
+                    <div className="text-sm font-semibold text-slate-300 mt-1">{Number(product.price).toLocaleString()}원</div>
+                  </div>
+                </button>
+              ))
+            ) : (
+              <div className="text-center text-slate-400 py-10">
+                <p>조건에 맞는 매칭 상품이 없습니다.</p>
+              </div>
+            )}
           </div>
 
-          <div className="mt-10">
+          <div className="mt-8">
             <button 
                onClick={handleSaveList}
-               className="w-full bg-white text-slate-950 py-4 rounded-full font-bold text-lg hover:bg-slate-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+               disabled={loading || products.length === 0}
+               className="w-full bg-white text-slate-950 py-4 rounded-full font-bold text-lg hover:bg-slate-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Save My List
             </button>
@@ -132,15 +211,15 @@ export default function ShoppingListPage() {
               </div>
 
               <div className="space-y-3">
-                <button onClick={handleAuth} className="w-full flex items-center justify-center gap-3 bg-white text-slate-950 py-4 rounded-full font-bold shadow-sm hover:bg-slate-200">
+                <button onClick={handleGoogleLogin} className="w-full flex items-center justify-center gap-3 bg-white text-slate-950 py-4 rounded-full font-bold shadow-sm hover:bg-slate-200 transition-colors">
                   <span className="font-bold text-lg">G</span>
                   Continue with Google
                 </button>
-                <button onClick={handleAuth} className="w-full flex items-center justify-center gap-3 bg-slate-800 border border-white/10 text-white py-4 rounded-full font-bold shadow-sm hover:bg-slate-700">
+                <button onClick={handleAuth} className="w-full flex items-center justify-center gap-3 bg-slate-800 border border-white/10 text-white py-4 rounded-full font-bold shadow-sm hover:bg-slate-700 transition-colors">
                   <Apple className="w-5 h-5" />
                   Continue with Apple
                 </button>
-                <button onClick={handleAuth} className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-violet-600 to-pink-600 text-white py-4 rounded-full font-bold shadow-sm hover:bg-opacity-90">
+                <button onClick={handleAuth} className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-violet-600 to-pink-600 text-white py-4 rounded-full font-bold shadow-sm hover:opacity-90 transition-opacity">
                   <Mail className="w-5 h-5" />
                   Sign up with Email
                 </button>

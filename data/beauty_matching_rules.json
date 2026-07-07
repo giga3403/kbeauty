@@ -1,0 +1,63 @@
+{
+  "description": "실제 스키마(skin_type, concern) 기반 뷰티 매칭 룰 엔진 샘플 데이터",
+  "rules": [
+    {
+      "id": "rule_dry_hydration",
+      "name": "건성 피부 보습 룰",
+      "conditions": {
+        "all": [
+          { "fact": "skin_type", "operator": "equal", "value": "Dry" }
+        ]
+      },
+      "event": {
+        "type": "match_products",
+        "params": {
+          "searchCondition": {
+            "category": ["Cream", "Ampoule"],
+            "concern": "Hydration"
+          },
+          "message": "건조한 피부를 위해 쫀쫀한 크림과 앰플을 통한 수분 충전을 추천합니다."
+        }
+      }
+    },
+    {
+      "id": "rule_oily_acne",
+      "name": "지성 피부 트러블 케어 룰",
+      "conditions": {
+        "all": [
+          { "fact": "skin_type", "operator": "in", "value": ["Oily", "Combination"] },
+          { "fact": "concern", "operator": "equal", "value": "Acne" }
+        ]
+      },
+      "event": {
+        "type": "match_products",
+        "params": {
+          "searchCondition": {
+            "category": ["Toner", "Cleanser"],
+            "concern": "Acne"
+          },
+          "message": "트러블 진정을 위해 모공을 막지 않는 가벼운 토너와 클렌저를 추천합니다."
+        }
+      }
+    },
+    {
+      "id": "rule_aging_care",
+      "name": "안티에이징 탄력 룰",
+      "conditions": {
+        "all": [
+          { "fact": "concern", "operator": "equal", "value": "Aging" }
+        ]
+      },
+      "event": {
+        "type": "match_products",
+        "params": {
+          "searchCondition": {
+            "category": ["Ampoule", "Essence"],
+            "concern": "Aging"
+          },
+          "message": "주름 개선과 탄력 관리에 효과적인 기능성 앰플/에센스를 추천합니다."
+        }
+      }
+    }
+  ]
+}
